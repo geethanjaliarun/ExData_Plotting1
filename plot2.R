@@ -1,0 +1,15 @@
+uciData = read.table("./household_power_consumption.txt", header = TRUE, sep=";")
+library(lubridate)
+uciData$Date = dmy(uciData$Date)
+d1 = ymd("2007-02-01")
+d2 = ymd("2007-02-02")
+newData = uciData[uciData$Date == d1 | uciData$Date == d2,]
+newData$Time = hms(newData$Time)
+newData$Global_active_power = as.character(newData$Global_active_power)
+newData$Global_active_power = as.numeric(newData$Global_active_power)
+png(filename = "plot2.png", height = 480, width = 480)
+plot(1:2880, newData$Global_active_power, type="l", xaxt="n", xlab = "",
+     ylab = "Global Active Power (kilowatts)")
+newXaxis = seq(from = 0, to = 2880, by = 1440)
+axis(side = 1, at = newXaxis, labels=c("Thu", "Fri", "Sat"))
+dev.off()
